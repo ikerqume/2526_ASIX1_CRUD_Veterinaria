@@ -12,19 +12,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $chip = trim($_POST['chip'] ?? '');
     $nombre = trim($_POST['nombre_masc'] ?? '');
     $sexo = trim($_POST['sexo'] ?? '');
-    $id_raza = $_POST['id_raza'] ?? null;
-    $id_prop = $_POST['id_prop'] ?? null;
-    $id_vet = $_POST['id_vet'] ?? null;
+    $fecha_nacimiento = trim($_POST['fecha_nacimiento'] ?? '');
+    $id_raza = (int)($_POST['id_raza'] ?? 0);
+    $id_prop = (int)($_POST['id_prop'] ?? 0);
+    $id_vet = (int)($_POST['id_vet'] ?? 0);
 
     // 2. Validación muy simple: que no estén vacíos
-    if (empty($chip) || empty($nombre) || empty($sexo) || empty($id_raza) || empty($id_prop) || empty($id_vet)) {
+    if (empty($chip) || empty($nombre) || empty($sexo) || empty($fecha_nacimiento) || empty($id_raza) || empty($id_prop) || empty($id_vet)) {
         $_SESSION['error'] = "Por favor, rellena todos los campos.";
         header("Location: ../../view/mascotas/crear.php");
         exit();
     }
 
+    // 2. Validar que la fecha de nacimiento no sea futura y tenga formato correcto
+    $fecha_nacimiento_obj = DateTime::createFromFormat('Y-m-d', $fecha_nacimiento);
+    $fecha_errors = DateTime::getLastErrors();
+    if ($fecha_nacimiento_obj === false || $fecha_errors['warning_count'] > 0 || $fecha_errors['error_count'] > 0) {
+        $_SESSION['error'] = "La fecha de nacimiento no tiene un formato válido (YYYY-MM-DD).";
+        header("Location: ../../view/mascotas/crear.php");
+        exit();
+    }
+    // Comprobación simple y fiable contra la fecha actual (formato YYYY-MM-DD)
+    if ($fecha_nacimiento > date('Y-m-d')) {
+        $_SESSION['error'] = "La fecha de nacimiento no puede ser una fecha futura.";
+        header("Location: ../../view/mascotas/crear.php");
+        exit();
+    }
+
     // 2.5. Verificamos que el chip no esté duplicado
-    $check_chip = mysqli_query($conn, "SELECT id FROM mascotas WHERE chip = '$chip'");
+    $chip_esc = mysqli_real_escape_string($conn, $chip);
+    $check_chip = mysqli_query($conn, "SELECT chip FROM mascotas WHERE chip = '$chip_esc'");
+    if ($check_chip === false) {
+        $_SESSION['error'] = "Error al verificar el chip: " . mysqli_error($conn);
+        header("Location: ../../view/mascotas/crear.php");
+        exit();
+    }
     if (mysqli_num_rows($check_chip) > 0) {
         $_SESSION['error'] = "El chip ya está registrado en otra mascota.";
         header("Location: ../../view/mascotas/crear.php");
@@ -54,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // 3. Preparamos la consulta
-    $sql = "INSERT INTO mascotas (chip, nombre, sexo, raza_id, propietario_id, veterinario_id) VALUES (?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO mascotas (chip, nombre, sexo, fecha_nacimiento, raza_id, propietario_id, veterinario_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($conn, $sql);
 
     if ($stmt === false) {
@@ -63,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    mysqli_stmt_bind_param($stmt, "sssiii", $chip, $nombre, $sexo, $id_raza, $id_prop, $id_vet);
+    mysqli_stmt_bind_param($stmt, "ssssiii", $chip, $nombre, $sexo, $fecha_nacimiento, $id_raza, $id_prop, $id_vet);
 
     // 4. Ejecutamos y comprobamos si ha ido bien
     if (mysqli_stmt_execute($stmt)) {

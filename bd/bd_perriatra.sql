@@ -45,6 +45,7 @@ CREATE TABLE mascotas (
     chip VARCHAR(50) PRIMARY KEY, -- Usamos el chip como identificador principal
     nombre VARCHAR(50) NOT NULL,
     sexo ENUM('Macho', 'Hembra', 'Desconocido') NOT NULL,
+    fecha_nacimiento DATE,
     raza_id INT,
     propietario_id INT,
     veterinario_id INT,

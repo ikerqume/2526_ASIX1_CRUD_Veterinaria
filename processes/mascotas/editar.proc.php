@@ -12,13 +12,13 @@ if (isset($_POST['btn_editar_masc'])) {
     $chip = $_POST['chip_mascota'];
     $nombre = $_POST['nombre_masc'];
     $sexo = $_POST['sexo'];
+    $fecha_nacimiento = $_POST['fecha_nacimiento'];
     $id_raza = $_POST['id_raza'];
     $id_prop = $_POST['id_prop'];
     $id_vet = $_POST['id_vet'];
 
-    // ¡AQUÍ ESTABA EL FALLO! 
     // Hemos cambiado id_raza por raza_id, id_propietario por propietario_id, etc.
-    $sql = "UPDATE mascotas SET nombre=?, sexo=?, raza_id=?, propietario_id=?, veterinario_id=? WHERE chip=?";
+    $sql = "UPDATE mascotas SET nombre=?, sexo=?, fecha_nacimiento=?, raza_id=?, propietario_id=?, veterinario_id=? WHERE chip=?";
     $stmt = mysqli_prepare($conn, $sql);
     
     // Comprobamos si hubo error al preparar la consulta
@@ -29,8 +29,8 @@ if (isset($_POST['btn_editar_masc'])) {
     }
     
     // Tipos: s=string, i=integer
-    // Orden: nombre(s), sexo(s), raza_id(i), propietario_id(i), veterinario_id(i), chip(s)
-    mysqli_stmt_bind_param($stmt, "ssiiis", $nombre, $sexo, $id_raza, $id_prop, $id_vet, $chip);
+    // Orden: nombre(s), sexo(s), fecha_nacimiento(s), raza_id(i), propietario_id(i), veterinario_id(i), chip(s)
+    mysqli_stmt_bind_param($stmt, "sssiiis", $nombre, $sexo, $fecha_nacimiento, $id_raza, $id_prop, $id_vet, $chip);
 
     // Ejecutamos la consulta
     if (mysqli_stmt_execute($stmt)) {

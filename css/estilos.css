@@ -164,7 +164,7 @@ body {
 #errorNombreRaza, #errorFisicas, #errorComportamiento,
 #errorNombreVet, #errorApellidosVet, #errorEspecialidad, #errorTelefonoVet, #errorEmailVet,
 #errorNombreProp, #errorApellidosProp, #errorDNI, #errorEmailProp, #errorTelefonoProp,
-#errorChip, #errorNomMasc, #errorSex, #errorRaza, #errorDuenMasc, #errorVetMasc {
+#errorChip, #errorNomMasc, #errorSex, #errorRaza, #errorDuenMasc, #errorVetMasc, #errorFecha {
     color: red; /* Letra roja */
     font-size: 11px; /* Muy pequeño */
     font-weight: normal; /* Letra fina */

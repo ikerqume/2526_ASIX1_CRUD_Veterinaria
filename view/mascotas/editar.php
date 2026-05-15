@@ -78,7 +78,7 @@ if ($veterinarios === null) {
     <title>Editar Mascota</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../../css/estilos.css">ç
+    <link rel="stylesheet" href="../../css/estilos.css">
     <script defer src="../../js/script.js"></script>
 </head>
 <body>
@@ -103,7 +103,7 @@ if ($veterinarios === null) {
 
     <main class="contenedor-crud">
         <div class="contenedor-form form-centrado">
-            <form action="../../processes/mascotas/editar.proc.php" method="POST">
+            <form action="../../processes/mascotas/editar.proc.php" method="POST" onsubmit="return validarFormMascota()">
                 <h2>Editar Ficha de <?php echo htmlspecialchars($mascota['nombre']); ?></h2>
 
                 <input type="hidden" name="chip_mascota" value="<?php echo $chip; ?>">
@@ -122,6 +122,12 @@ if ($veterinarios === null) {
                         <option value="Desconocido" <?php echo ($mascota['sexo'] == 'Desconocido') ? 'selected' : ''; ?>>Desconocido</option>
                     </select>
                     <p id="errorSex" class="texto-error"></p>
+                </div>
+
+                <div class="grupo-input">
+                    <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                    <input id="fecha_nacimiento" type="date" name="fecha_nacimiento" value="<?php echo htmlspecialchars($mascota['fecha_nacimiento']); ?>" required max="<?php echo date('Y-m-d'); ?>" onblur="validarFechaNacimiento()">
+                    <p id="errorFecha" class="texto-error"></p>
                 </div>
 
                 <div class="grupo-input">

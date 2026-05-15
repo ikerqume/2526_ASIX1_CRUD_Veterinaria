@@ -91,7 +91,7 @@ if ($mascotas === null) {
         <form method="GET" action="" class="form-filtros">
             <input type="text" name="nombre" placeholder="Nombre mascota..." value="<?php echo $f_nombre; ?>">
             <div class="filtros-botones">
-                <button type="submit" class="btn-filtrar">Buscar Paciente</button>
+                <button type="submit" class="btn-filtrar">Buscar Mascotas</button>
                 <a href="index.php" class="btn-limpiar">Limpiar</a>
             </div>
         </form>

@@ -2,8 +2,11 @@
 // Recibe el id del elemento donde mostrar el error y el mensaje a mostrar.
 // Es llamada al final de cada función de validación del archivo.
 function gestionarError(idError, mensaje) {
-    const contenedor = document.getElementById(idError); // Busca el elemento HTML por su id (ej: "errorUsername")
-    contenedor.textContent = mensaje; // Escribe el mensaje de error en ese elemento, o lo vacía si no hay error
+    const contenedor = document.getElementById(idError);
+    if (!contenedor) return false;
+    contenedor.textContent = mensaje;
+    contenedor.style.display = mensaje ? 'block' : 'none';
+    return mensaje === '';
 }
 
 // --- VALIDACIONES DE REGISTRO ---
@@ -392,4 +395,43 @@ function validaSex() {
     } 
 
     gestionarError("errorSex", mensaje);
+}
+
+function validarFechaNacimiento() {
+    const fechaElem = document.getElementById("fecha_nacimiento");
+    if (!fechaElem) return true;
+    const fechaNacimiento = fechaElem.value;
+    let mensaje = "";
+
+    if (fechaNacimiento === "") {
+        mensaje = "Este campo no puede estar vacío";
+    } else {
+        // Comparación directa en formato YYYY-MM-DD evita problemas de timezone
+        if (fechaNacimiento > new Date().toISOString().slice(0,10)) {
+            mensaje = "La fecha de nacimiento no puede ser una fecha futura";
+        }
+    }
+
+    gestionarError("errorFecha", mensaje);
+    return mensaje === "";
+}
+
+function validarFormMascota() {
+    // Ejecutar validaciones individuales
+    ValidaNomMasc();
+    validaChip();
+    validaSex();
+    ValidarRaza();
+    ValidarDueno();
+    ValidaVet();
+    const fechaOk = validarFechaNacimiento();
+
+    // Comprobar si hay mensajes de error visibles
+    const errores = ['errorNomMasc','errorChip','errorSex','errorRaza','errorDuenMasc','errorVetMasc','errorFecha'];
+    for (const id of errores) {
+        const el = document.getElementById(id);
+        if (el && el.textContent.trim() !== '') return false;
+    }
+
+    return fechaOk;
 }

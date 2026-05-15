@@ -96,7 +96,7 @@ if ($props === null) {
                     ?>
                 </div>
             <?php } ?>
-            <form action="../../processes/mascotas/crear.proc.php" method="POST">
+            <form action="../../processes/mascotas/crear.proc.php" method="POST" onsubmit="return validarFormMascota()">
                 <h2>Añadir Mascota</h2>
                 
                 <div class="grupo-input">
@@ -120,6 +120,12 @@ if ($props === null) {
                         <option value="Desconocido">Desconocido</option>
                     </select>
                     <p id="errorSex" class="texto-error"></p>
+                </div>
+
+                <div class="grupo-input">
+                    <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                    <input id="fecha_nacimiento" type="date" name="fecha_nacimiento" required max="<?php echo date('Y-m-d'); ?>" onblur="validarFechaNacimiento()">
+                    <p id="errorFecha" class="texto-error"></p>
                 </div>
 
                 <div class="grupo-input">

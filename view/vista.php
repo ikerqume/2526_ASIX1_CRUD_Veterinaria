@@ -43,7 +43,7 @@ $username = htmlspecialchars($_SESSION['username']);
     <div class="grid-tarjetas">
         <a href="mascotas/index.php" class="tarjeta tarjeta-mascotas">
             <i class="fa-solid fa-paw tarjeta-icono"></i>
-            <h3>Pacientes</h3>
+            <h3>Mascotas</h3>
             <p>Fichas clínicas y registro animal.</p>
             <span class="tarjeta-accion">Ver →</span>
         </a>
