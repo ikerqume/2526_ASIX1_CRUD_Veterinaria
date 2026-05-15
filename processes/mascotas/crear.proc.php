@@ -23,6 +23,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
+    // 2.5. Verificamos que el chip no esté duplicado
+    $check_chip = mysqli_query($conn, "SELECT id FROM mascotas WHERE chip = '$chip'");
+    if (mysqli_num_rows($check_chip) > 0) {
+        $_SESSION['error'] = "El chip ya está registrado en otra mascota.";
+        header("Location: ../../view/mascotas/crear.php");
+        exit();
+    }
+
+    // 2.6. Verificamos que los IDs existan en sus tablas
+    $check_raza = mysqli_query($conn, "SELECT id FROM razas WHERE id = $id_raza");
+    if (mysqli_num_rows($check_raza) == 0) {
+        $_SESSION['error'] = "La raza seleccionada no existe.";
+        header("Location: ../../view/mascotas/crear.php");
+        exit();
+    }
+
+    $check_prop = mysqli_query($conn, "SELECT id FROM propietarios WHERE id = $id_prop");
+    if (mysqli_num_rows($check_prop) == 0) {
+        $_SESSION['error'] = "El propietario seleccionado no existe.";
+        header("Location: ../../view/mascotas/crear.php");
+        exit();
+    }
+
+    $check_vet = mysqli_query($conn, "SELECT id FROM veterinarios WHERE id = $id_vet");
+    if (mysqli_num_rows($check_vet) == 0) {
+        $_SESSION['error'] = "El veterinario seleccionado no existe.";
+        header("Location: ../../view/mascotas/crear.php");
+        exit();
+    }
+
     // 3. Preparamos la consulta
     $sql = "INSERT INTO mascotas (chip, nombre, sexo, raza_id, propietario_id, veterinario_id) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($conn, $sql);

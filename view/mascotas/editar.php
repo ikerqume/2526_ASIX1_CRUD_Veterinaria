@@ -28,7 +28,7 @@ if ($mascota === null) {
 }
 
 // Consultas para las listas desplegables
-$sql_razas = "SELECT id, nombre FROM razas";
+$sql_razas = "SELECT id, nombre FROM razas ORDER BY nombre";
 $resultado_razas = mysqli_query($conn, $sql_razas);
 
 if ($resultado_razas === false) {
@@ -36,7 +36,7 @@ if ($resultado_razas === false) {
     exit;
 }
 
-$sql_props = "SELECT id, nombre FROM propietarios";
+$sql_props = "SELECT id, nombre FROM propietarios ORDER BY nombre";
 $resultado_props = mysqli_query($conn, $sql_props);
 
 if ($resultado_props === false) {
@@ -44,7 +44,7 @@ if ($resultado_props === false) {
     exit;
 }
 
-$sql_vets = "SELECT id, nombre FROM veterinarios";
+$sql_vets = "SELECT id, nombre FROM veterinarios ORDER BY nombre";
 $resultado_vets = mysqli_query($conn, $sql_vets);
 
 if ($resultado_vets === false) {
@@ -76,6 +76,7 @@ if ($veterinarios === null) {
 <head>
     <meta charset="UTF-8">
     <title>Editar Mascota</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../css/estilos.css">ç
     <script defer src="../../js/script.js"></script>
@@ -109,13 +110,23 @@ if ($veterinarios === null) {
 
                 <div class="grupo-input">
                     <label for="nombre_masc">Nombre:</label>
-                    <input id="nomMasc" type="text" name="nomMasc" value="<?php echo htmlspecialchars($mascota['nombre']); ?>" required onblur="ValidaNomMasc()">
+                    <input id="nomMasc" type="text" name="nombre_masc" value="<?php echo htmlspecialchars($mascota['nombre']); ?>" required onblur="ValidaNomMasc()">
+                    <p id="errorSex" class="texto-error"></p>
+                </div>
+
+                <div class="grupo-input">
+                    <label for="sexo">Sexo:</label>
+                    <select id="sexo" name="sexo" required onblur="validaSex()">
+                        <option value="Macho" <?php echo ($mascota['sexo'] == 'Macho') ? 'selected' : ''; ?>>Macho</option>
+                        <option value="Hembra" <?php echo ($mascota['sexo'] == 'Hembra') ? 'selected' : ''; ?>>Hembra</option>
+                        <option value="Desconocido" <?php echo ($mascota['sexo'] == 'Desconocido') ? 'selected' : ''; ?>>Desconocido</option>
+                    </select>
                     <p id="errorSex" class="texto-error"></p>
                 </div>
 
                 <div class="grupo-input">
                     <label for="raza">Raza:</label>
-                    <select id="raza" name="raza" required onblur="ValidarRaza()">
+                    <select id="raza" name="id_raza" required onblur="ValidarRaza()">
                         <?php
                             foreach ($razas as $raza) {
                                 $razaId = htmlspecialchars($raza['id']);
@@ -136,7 +147,7 @@ if ($veterinarios === null) {
 
                 <div class="grupo-input">
                     <label for="id_prop">Dueño:</label>
-                    <select id="dueno" name="dueno" required onblur="ValidarDueno()">
+                    <select id="dueno" name="id_prop" required onblur="ValidarDueno()">
                         <?php
                             foreach ($propietarios as $prop) {
                                 $propId = htmlspecialchars($prop['id']);

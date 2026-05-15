@@ -51,6 +51,18 @@ if (!isset($_SESSION['user_id'])) {
             </div>
         <?php } ?>
 
+        <?php if (isset($_SESSION['mensaje'])) { ?>
+            <div class="alerta-exito">
+                <?php
+                    $mensajeExito = $_SESSION['mensaje'];
+
+                    echo "<i class=\"fa-solid fa-circle-check\"></i> " . $mensajeExito; // Mostrar mensaje de éxito
+
+                    unset($_SESSION['mensaje']); // Limpiar el mensaje para que no se repita en recargas
+                ?>
+            </div>
+        <?php } ?>
+
         <div class="contenedor-form form-centrado">
             <form action="../../processes/razas/crear.proc.php" method="POST">
 

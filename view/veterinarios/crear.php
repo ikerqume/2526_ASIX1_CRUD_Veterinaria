@@ -51,6 +51,18 @@ if (!isset($_SESSION['user_id'])) {
             </div>
         <?php } ?>
 
+        <?php if (isset($_SESSION['mensaje'])) { ?>
+            <div class="alerta-exito">
+                <?php
+                    $mensajeExito = $_SESSION['mensaje'];
+
+                    echo "<i class=\"fa-solid fa-circle-check\"></i> " . $mensajeExito; // Mostrar mensaje de éxito
+
+                    unset($_SESSION['mensaje']); // Limpiar el mensaje para que no se repita en recargas
+                ?>
+            </div>
+        <?php } ?>
+
         <div class="contenedor-form form-centrado">
             <form action="../../processes/veterinarios/crear.proc.php" method="POST" >
 
@@ -88,6 +100,12 @@ if (!isset($_SESSION['user_id'])) {
                     <label for="email_vet">Correo Electrónico</label>
                     <input type="email" name="email_vet" id="email_vet" placeholder="Ej: laura.martinez@clinica.com" onblur="validaEmailVet()">
                     <p id="errorEmailVet" class="texto-error"></p>
+                </div>
+
+                <div class="grupo-input">
+                    <label for="salario">Salario (opcional)</label>
+                    <input type="number" name="salario" id="salario" step="0.01" placeholder="Ej: 2500.00" onblur="validaSalario()">
+                    <p id="errorSalario" class="texto-error"></p>
                 </div>
 
                 <div class="grupo-botones">

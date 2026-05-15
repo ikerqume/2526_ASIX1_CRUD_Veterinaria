@@ -7,13 +7,13 @@ if (isset($_POST['btn_editar_prop'])) {
 
     // Recogemos los datos del formulario
     $id = $_POST['id_prop'];
-    $nombre = $_POST['nombre_prop'];
-    $apellidos = $_POST['apellidos_prop'];
-    $dni = $_POST['dni_prop'];
-    $email = $_POST['email_prop'];
-    $telefono = trim($_POST['telefono_prop']);
+    $nombre = trim($_POST['nombre_prop'] ?? '');
+    $apellidos = trim($_POST['apellidos_prop'] ?? '');
+    $dni = trim($_POST['dni_prop'] ?? '');
+    $email = trim($_POST['email_prop'] ?? '');
+    $telefono = trim($_POST['telefono_prop'] ?? '');
 
-    // Validación sencilla: que no estén vacíos y el DNI tenga cara y ojos
+    // Validación sencilla: que no estén vacíos los campos obligatorios
     if (empty($nombre) || empty($dni) || empty($email)) {
         $_SESSION['error'] = "El nombre, DNI y Email son obligatorios.";
         header("Location: ../../view/propietarios/editar.php?id=" . $id);

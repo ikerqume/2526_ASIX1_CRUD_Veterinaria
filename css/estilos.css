@@ -210,7 +210,7 @@ body {
     left: 0; /* Pegada a la izquierda */
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2); /* Sombra inferior */
     z-index: 1000; /* Prioridad máxima */
-    border-bottom: 3px solid #4CAF50; /* Línea verde */
+    border-bottom: 2px solid #34495e; /* Línea gris oscura sutil */
 }
 
 .navbar-logo {
@@ -370,6 +370,11 @@ body {
     justify-content: space-between; /* Título izq, botón der */
     align-items: center; /* Centra verticalmente */
     margin-bottom: 20px; /* Separación inferior */
+    background-color: #f8f9fa; /* Fondo gris suave */
+    padding: 15px 20px; /* Espacio interior */
+    border-left: 5px solid #2c3e50; /* Borde oscuro a la izquierda */
+    border-radius: 5px; /* Esquinas redondeadas */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08); /* Sombra sutil */
 }
 
 .btn-anadir {
@@ -510,96 +515,117 @@ body {
     font-weight: bold; /* Negrita */
     margin-bottom: 10px; /* Separación inferior */
     font-size: 14px; /* Tamaño pequeño */
+    background-color: #ecf0f1; /* Fondo gris suave */
+    padding: 8px 12px; /* Espacio interior */
+    border-left: 4px solid #3498db; /* Borde azul a la izquierda */
+    border-radius: 3px; /* Esquinas suaves */
+    display: inline-block; /* Ajusta al contenido */
 }
 
-/* DISEÑO ADAPTABLE A MÓVILES */
+/* =========================================================================
+   📱 DISEÑO ADAPTABLE A MÓVILES (RESPONSIVE PRO)
+   ========================================================================= */
+
+/* TABLETS Y PANTALLAS MEDIANAS (Hasta 768px) */
 @media (max-width: 768px) {
+    /* 1. Fondo adaptado */
+    body {
+        background-size: cover; /* Evita que el fondo del 67% se vea raro en móvil */
+    }
+
+    /* 2. Navbar apilada y centrada (Arregla image_4.png) */
     .navbar {
-        flex-direction: column; /* Apila elementos */
-        padding: 10px 15px; /* Menos espacio */
-        position: fixed; /* Sigue fijo */
-        top: 0; /* Pegada arriba */
-        left: 0; /* Pegada izquierda */
-        width: 100%; /* 100% ancho */
-        z-index: 1000; /* Prioridad máxima */
+        flex-direction: column; /* Apila el logo y los enlaces verticalmente */
+        padding: 10px;
+        gap: 10px; /* Separación entre logo y menú */
     }
-
-    .navbar-logo h2 {
-        font-size: 18px; /* Más pequeño */
-    }
-
-    .navbar-logo img {
-        height: 36px; /* Más pequeño */
-    }
-
+    .navbar-logo h2 { font-size: 20px; }
+    .navbar-logo img { height: 40px; }
+    
     .navbar-enlaces {
-        display: flex; /* Flexbox */
-        flex-wrap: wrap; /* Elementos en nuevas líneas */
-        justify-content: center; /* Centra botones */
-        gap: 6px; /* Poco espacio */
-        margin-top: 10px; /* Separación superior */
-        width: 100%; /* 100% ancho */
+        display: flex;
+        flex-wrap: wrap; /* ✨ LA MAGIA: Permite que los botones salten de línea si no caben */
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        gap: 10px;
+        margin-top: 10px;
+    }
+    
+    .navbar-enlaces a, .btn-cerrar {
+        margin: 0; /* Matamos cualquier margen antiguo que los empuje hacia los lados */
+        text-align: center;
+        flex-grow: 0; /* Evita que se estiren de forma rara */
     }
 
-    .navbar-enlaces a {
-        margin-left: 0; /* Sin margen izquierdo */
-        font-size: 13px; /* Más pequeño */
-        padding: 5px 9px; /* Más compacto */
+    /* 3. Ajuste de márgenes por la nueva Navbar */
+    .contenedor-dashboard, .contenedor-crud {
+        margin-top: 140px; /* Bajamos el contenido para que no lo tape la navbar */
+        padding: 15px;
     }
 
-    .contenedor-dashboard {
-        margin-top: 130px; /* Más espacio navbar */
-        padding: 15px; /* Menos espacio */
-    }
-
-    .contenedor-crud {
-        margin-top: 130px; /* Más espacio navbar */
-        padding: 15px; /* Menos espacio */
-    }
-
+    /* 4. Tarjetas del Dashboard en una sola columna */
     .grid-tarjetas {
-        grid-template-columns: 1fr; /* 1 columna */
-        gap: 16px; /* Menos espacio */
+        grid-template-columns: 1fr;
     }
 
+    /* 5. El botón de volver pasa a ser parte del flujo normal (no flota absolúto) (Arregla image_3.png) */
     .btn-volver {
-        position: relative; /* Posicionamiento relativo */
-        top: 0; /* Sin desplazamiento */
-        left: 0; /* Sin desplazamiento */
-        display: inline-block; /* Elemento en línea bloque */
-        margin-bottom: 15px; /* Separación inferior */
+        position: relative;
+        top: 0; left: 0;
+        display: inline-block;
+        margin-top: 130px; /* Bajamos el botón para que no lo tape el menú apilado */
+        margin-left: 15px;
+        margin-bottom: -10px;
     }
 
-    .form-filtros {
-        flex-direction: column; /* Apila elementos */
-        align-items: stretch; /* Estira horizontalmente */
-    }
-
-    .filtros-botones {
-        justify-content: center; /* Centra botones */
-    }
-
+    /* 6. Cabecera de tablas y botones estirados */
     .cabecera-crud {
-        flex-direction: column; /* Apila elementos */
-        gap: 10px; /* Poco espacio */
-        align-items: flex-start; /* Alineación izquierda */
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+        gap: 15px;
+    }
+    .form-filtros {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filtros-botones {
+        justify-content: stretch;
+    }
+    .btn-filtrar, .btn-limpiar {
+        flex: 1;
+        text-align: center;
+    }
+
+    /* 7. MAGIA PARA TABLAS: Evita que el texto salte de línea y se deforme */
+    .tabla-crud th, .tabla-crud td {
+        white-space: nowrap; 
     }
 }
-/* DISEÑO ADAPTABLE A MÓVILES */
+
+/* MÓVILES PEQUEÑOS (Hasta 480px) */
 @media (max-width: 480px) {
-    .navbar-logo h2 {
-        font-size: 16px; /* Más pequeño */
+    .navbar-logo h2 { font-size: 18px; }
+    .navbar-logo img { height: 35px; }
+
+    .contenedor-dashboard, .contenedor-crud {
+        margin-top: 150px; 
     }
 
-    .contenedor-dashboard {
-        margin-top: 140px; /* Más espacio navbar */
+    /* Mejoras de espacio vital para el usuario en formularios */
+    .contenedor-form {
+        padding: 25px 20px; /* Reducimos el padding lateral para ganar espacio de lectura */
+        width: 95%;
     }
 
-    .contenedor-crud {
-        margin-top: 140px; /* Más espacio navbar */
+    /* Apilamos los botones de los formularios para que no se pulsen por error */
+    .grupo-botones {
+        flex-direction: column;
+        gap: 10px;
     }
-
-    .cabecera-dashboard h1 {
-        font-size: 22px; /* Más pequeño */
+    .btn-principal, .btn-cancelar {
+        padding: 14px; /* Botones más altos (mejor para el dedo) */
+        width: 100%;
     }
 }

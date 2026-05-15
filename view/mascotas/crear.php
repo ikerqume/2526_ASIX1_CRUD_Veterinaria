@@ -5,7 +5,7 @@ session_start();
 include '../../services/conexion.php';
 
 // Pedimos los datos de razas, veterinarios y propietarios
-$sql_razas = "SELECT * FROM razas";
+$sql_razas = "SELECT * FROM razas ORDER BY nombre";
 $resultado_razas = mysqli_query($conn, $sql_razas);
 
 if ($resultado_razas === false) {
@@ -13,7 +13,7 @@ if ($resultado_razas === false) {
     exit;
 }
 
-$sql_vets = "SELECT * FROM veterinarios";
+$sql_vets = "SELECT * FROM veterinarios ORDER BY nombre";
 $resultado_vets = mysqli_query($conn, $sql_vets);
 
 if ($resultado_vets === false) {
@@ -21,7 +21,7 @@ if ($resultado_vets === false) {
     exit;
 }
 
-$sql_props = "SELECT * FROM propietarios";
+$sql_props = "SELECT * FROM propietarios ORDER BY nombre";
 $resultado_props = mysqli_query($conn, $sql_props);
 
 if ($resultado_props === false) {
@@ -53,6 +53,7 @@ if ($props === null) {
 <head>
     <meta charset="UTF-8">
     <title>Nueva Mascota</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../css/estilos.css">
     <script defer src="../../js/script.js"></script>
@@ -105,8 +106,8 @@ if ($props === null) {
                 </div>
 
                 <div class="grupo-input">
-                    <label for="nomMasc">Nombre:</label>
-                    <input id="nomMasc" type="text" name="nomMasc" required onblur="ValidaNomMasc()">
+                    <label for="nombre_masc">Nombre:</label>
+                    <input id="nombre_masc" type="text" name="nombre_masc" required onblur="ValidaNomMasc()">
                     <p id="errorNomMasc" class="texto-error"></p>
                 </div>
 
@@ -123,7 +124,7 @@ if ($props === null) {
 
                 <div class="grupo-input">
                     <label for="id_raza">Raza:</label>
-                    <select id="raza" name="raza" required onblur="ValidarRaza()">
+                    <select id="id_raza" name="id_raza" required onblur="ValidarRaza()">
                         <option value="">-- Selecciona una raza --</option> 
                         <?php
                             foreach ($razas as $raza) {
@@ -143,7 +144,7 @@ if ($props === null) {
 
                 <div class="grupo-input">
                     <label for="id_prop">Dueño:</label>
-                    <select id="dueno" name="dueno" required onblur="ValidarDueno()">
+                    <select id="id_prop" name="id_prop" required onblur="ValidarDueno()">
                         <option value="">-- Selecciona un dueño --</option>
                         <?php
                             foreach ($props as $prop) {
@@ -163,7 +164,7 @@ if ($props === null) {
 
                 <div class="grupo-input">
                     <label for="id_vet">Veterinario:</label>
-                    <select id="vet" name="vet" required onblur="ValidaVet()">
+                    <select id="id_vet" name="id_vet" required onblur="ValidaVet()">
                         <option value="">-- Selecciona un veter --</option>
 
                         <?php

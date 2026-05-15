@@ -33,6 +33,7 @@ if ($p === null) {
 <head>
     <meta charset="UTF-8">
     <title>Editar Propietario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../css/estilos.css">
     <script defer src="../../js/script.js"></script>
@@ -88,7 +89,7 @@ if ($p === null) {
                 </div>
                 <div class="grupo-input">
                     <label>Teléfono</label>
-                    <input type="tel" name="telfProp" id="telfProp" value="<?php echo htmlspecialchars($p['telefono']); ?>" placeholder="Ej: 600123456" onblur="ValidaTelfProp()">
+                    <input type="tel" name="telefono_prop" id="telefono_prop" value="<?php echo htmlspecialchars($p['telefono']); ?>" placeholder="Ej: 600123456" onblur="ValidaTelfProp()">
                     <p id="errorTelefonoProp" class="texto-error"></p>
                 </div>
                 <div class="grupo-botones">

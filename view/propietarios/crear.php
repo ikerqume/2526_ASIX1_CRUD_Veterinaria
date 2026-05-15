@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <title>Añadir Propietario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../css/estilos.css">
     <script defer src="../../js/script.js"></script>
@@ -47,6 +48,18 @@ if (!isset($_SESSION['user_id'])) {
             </div>
         <?php } ?>
 
+        <?php if (isset($_SESSION['mensaje'])) { ?>
+            <div class="alerta-exito">
+                <?php
+                    $mensajeExito = $_SESSION['mensaje'];
+
+                    echo "<i class=\"fa-solid fa-circle-check\"></i> " . $mensajeExito; // Mostrar mensaje de éxito
+
+                    unset($_SESSION['mensaje']); // Limpiar el mensaje para que no se repita en recargas
+                ?>
+            </div>
+        <?php } ?>
+
         <div class="contenedor-form form-centrado">
             <form action="../../processes/propietarios/crear.proc.php" method="POST">
 
@@ -78,7 +91,7 @@ if (!isset($_SESSION['user_id'])) {
                 </div>
                 <div class="grupo-input">
                     <label for="telefono_prop">Teléfono</label>
-                    <input type="tel" name="telfProp" id="telfProp" placeholder="Ej: 600123456" onblur="ValidaTelfProp()">
+                    <input type="tel" name="telefono_prop" id="telefono_prop" placeholder="Ej: 600123456" onblur="ValidaTelfProp()">
                     <p id="errorTelefonoProp" class="texto-error"></p>
                 </div>
                 <div class="grupo-botones">

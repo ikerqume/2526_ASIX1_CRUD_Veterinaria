@@ -91,6 +91,12 @@ if ($vet === null) {
                     <input type="email" name="email_vet" id="email_vet" value="<?php echo htmlspecialchars($vet['email']); ?>" onblur="validaEmailVet()">
                     <p id="errorEmailVet" class="texto-error"></p>
                 </div>
+
+                <div class="grupo-input">
+                    <label>Salario (opcional)</label>
+                    <input type="number" name="salario" id="salario" step="0.01" value="<?php echo htmlspecialchars($vet['salario'] ?? ''); ?>" onblur="validaSalario()">
+                    <p id="errorSalario" class="texto-error"></p>
+                </div>
                 <div class="grupo-botones">
                     <button type="submit" name="btn_editar_vet" class="btn-principal">Actualizar Datos</button>
                     <a href="index.php" class="btn-cancelar">Cancelar</a>

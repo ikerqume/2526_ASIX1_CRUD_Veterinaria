@@ -72,9 +72,11 @@ if ($razas === null) {
         <?php if ($filtro_nombre !== '') echo "<p class='filtros-activos'>$total_filas resultado(s) encontrado(s)</p>"; ?>
 
         <?php if (isset($_SESSION['mensaje'])) { ?>
-            <div class='mensaje-php exito-php'>
+            <div class="alerta-exito">
                 <?php
-                    echo $_SESSION['mensaje']; // Mostrar el mensaje de éxito
+                    $mensajeExito = $_SESSION['mensaje'];
+
+                    echo "<i class=\"fa-solid fa-circle-check\"></i> " . $mensajeExito; // Mostrar mensaje de éxito
 
                     unset($_SESSION['mensaje']); // Limpiar el mensaje para que no se repita en recargas
                 ?>

@@ -1,6 +1,9 @@
+// Función reutilizable que gestiona la visualización de errores en el HTML.
+// Recibe el id del elemento donde mostrar el error y el mensaje a mostrar.
+// Es llamada al final de cada función de validación del archivo.
 function gestionarError(idError, mensaje) {
-    const contenedor = document.getElementById(idError); 
-    contenedor.textContent = mensaje;
+    const contenedor = document.getElementById(idError); // Busca el elemento HTML por su id (ej: "errorUsername")
+    contenedor.textContent = mensaje; // Escribe el mensaje de error en ese elemento, o lo vacía si no hay error
 }
 
 // --- VALIDACIONES DE REGISTRO ---
@@ -8,12 +11,15 @@ function gestionarError(idError, mensaje) {
 function validaUsername() {
     const username = document.getElementById("username").value;
     let mensaje = "";
-    
+
+    // Si el campo está vacío
     if (username.length === 0) {
         mensaje = "Este campo no puede estar vacio, introduce un nombre valido";
+        // Si tiene algo pero menos de 3 caracteres
     } else if (username.length < 3) {
-        mensaje = "El usuario debe tener al menos 3 letraas";
+        mensaje = "El usuario debe tener al menos 3 letras";
     }
+    //Funcion que creamos antes la implementamos aqui para que se muestren los errores
     gestionarError ("errorUsername", mensaje)
 }
 
@@ -21,10 +27,13 @@ function validaEmail() {
     const email = document.getElementById("email").value;
     let mensaje = "";
 
+    // Regex que valida el formato estándar de un email
     const regex = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
     
+    // Si el campo está vacío
     if (email.length === 0) {
         mensaje = "El campo no puede estar vacio";
+    // Si tiene contenido pero no cumple el formato de email
     } else if (!regex.test(email)) {
         mensaje = "El formato del email no es valido";
     }
@@ -35,10 +44,14 @@ function validaPassword() {
     const passReg = document.getElementById("password").value;
     let mensaje = "";
 
-    const regex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    // Permite letras, números y caracteres especiales, entre 8 y 30 caracteres
+    const regex = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,30}$/;
     
+    // Si el campo está vacío
     if (passReg.length === 0) {
         mensaje = "este campo no puede estar vacio";
+
+    // Si tiene contenido pero no cumple los requisitos de la regex
     } else if (!regex.test(passReg)) {
         mensaje = "La contraseña debe cumplir los requisitos"
     }
@@ -50,10 +63,15 @@ function validaPassword() {
 function validaEmailLogin() {
     const emailLog = document.getElementById("email_login").value;
     let mensaje = "";
+
+    // Mismo regex de email que en el registro
     const regex = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
     
+    // Si el campo está vacío
     if (emailLog.length === 0) {
         mensaje = "El campo no puede estar vacio";
+    
+     // Si tiene contenido pero no cumple los requisitos de la regex
     } else if (!regex.test(emailLog)) {
         mensaje = "El formato del email no es valido";
     }
@@ -64,14 +82,19 @@ function validaPassLogin() {
     const passLog= document.getElementById("pass_login").value;
     let mensaje = "";
     
-    const reguex = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,30}$/;
+    // Mismo regex que en el registro
+    const regex = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,30}$/;
     
     if(passLog.length === 0) {
         mensaje = "La contraseña no puede estar vacía";
+    
+    // Si tiene algo pero menos de 8 caracteres
     } else if (passLog.length < 8) {
         mensaje = "La contraseña debe tener mínimo 8 caracteres";
+    // Si no contiene ninguna letra mayúscula
     } else if (!/[A-Z]/.test(passLog)) {
         mensaje = "La contraseña debe tener al menos 1 mayúscula";
+    // Si no contiene ningún número
     } else if (!/[0-9]/.test(passLog)) {
         mensaje = "La contraseña debe tener al menos 1 número";
     }
@@ -86,7 +109,8 @@ function validaNombreRaza() {
     let mensaje = "";
     
     if (raza.length === 0) {
-        mensaje = "Rellena este campo con el nombre de la raza, no lo deje vacio"
+        mensaje = "Rellena este campo con el nombre de la raza, no lo deje vacio";
+    // Si tiene algo pero menos de 3 caracteres
     } else if (raza.length < 3) {
         mensaje = "Introduce el nombre de una raza valida"
     }
@@ -99,7 +123,8 @@ function validaFisicas() {
     let mensaje = "";
     
     if (fisica.length === 0) {
-        mensaje = "Rellena este campo con las caracteristicas de la raza introducida"
+        mensaje = "Rellena este campo con las caracteristicas de la raza introducida";
+    // Si tiene algo pero menos de 3 caracteres
     } else if (fisica.length < 3) {
         mensaje = "Introduce una breve descripcion no solo 3 letras"
     }
@@ -111,7 +136,8 @@ function validaComportamiento() {
     let mensaje = "";
     
     if (comportamiento.length === 0) {
-        mensaje = "Rellena este campo con el comportamiento de la raza introducida"
+        mensaje = "Rellena este campo con el comportamiento de la raza introducida";
+    // Si tiene algo pero menos de 3 caracteres
     } else if (comportamiento.length < 3) {
         mensaje = "Introduce una breve descripcion no solo 3 letras"
     }
@@ -123,8 +149,10 @@ function validaComportamiento() {
 function validaNombreVet() {
     const nomVet = document.getElementById("nombre_vet").value;
     let mensaje = "";
-
-    if (nomVet.length < 3) {
+    
+    if (nomVet.length === 0) {
+        mensaje = "Este campo no puede estar vacio";
+    } else if (nomVet.length < 3) {
         mensaje = "Introduce un nombre valido"
     }
     gestionarError ("errorNombreVet", mensaje);
@@ -134,7 +162,11 @@ function validaApellidosVet() {
     const apellVet = document.getElementById("apellidos_vet").value;
     let mensaje = "";
 
-    if (apellVet.length < 3) {
+    // Si el campo está vacío   
+    if (apellVet.length === 0) {
+        mensaje = "Este campo no puede estar vacio";
+    // Si tiene algo pero menos de 3 caracteres
+    } else if (apellVet.length < 3) {
         mensaje = "Introduce un apellido valido";
     }
     gestionarError ("errorApellidosVet", mensaje);
@@ -144,7 +176,9 @@ function validaEspecialidad() {
     const especialidad = document.getElementById("especialidad").value;
     let mensaje = "";
 
-    if (especialidad.length < 3) {
+    if (especialidad.length === 0) {
+        mensaje = "Este campo no puede estar vacio";
+    } else if (especialidad.length < 3) {
         mensaje = "Especialidad no valida";
     }
     gestionarError ("errorEspecialidad", mensaje);
@@ -154,12 +188,16 @@ function validaTelefonoVet() {
     const telVet = document.getElementById("telefono_vet").value;
     let mensaje = "";
 
+    // Valida exactamente 9 dígitos numéricos
     const regexTelef = /^[0-9]{9}$/; // Valida exactamente 9 números
 
+    // Si el campo está vacío o solo tiene espacios
     if (telVet.trim() === "") {
         mensaje = "El teléfono no puede estar vacío";
+    // Si tiene algo pero menos de 9 dígitos
     } else if (telVet.length < 9) {
-        mensaje = "El telefono no puede tener menos de 9 digitos"
+        mensaje = "El telefono no puede tener menos de 9 digitos";
+    // Si tiene 9 o más caracteres pero no son todos números
     } else if (!regexTelef.test(telVet)) {
         mensaje = "El numero debe tener 9 digitos";
     }
@@ -171,10 +209,12 @@ function validaEmailVet() {
     const emailVet = document.getElementById("email_vet").value;
     let mensaje = "";
 
+    // Mismo regex de email usado en el resto del proyecto
     const regex = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
 
     if (emailVet.length === 0 ) {
         mensaje = "El campo no puede estar vacío";
+    // Si tiene contenido pero no cumple el formato de email
     } else if (!regex.test(emailVet)) {
         mensaje = "El formato del email no es válido";
     }
@@ -185,6 +225,7 @@ function validaSalario() {
     const salario = document.getElementById("salario").value;
     let mensaje = "";
 
+    // El salario es opcional, por eso solo valida si el campo tiene contenido
     if (salario.length > 0 && (isNaN(salario) || parseFloat(salario) < 0)) {
         mensaje = "El salario debe ser un número positivo";
     }
@@ -197,8 +238,10 @@ function validaNombreProp () {
     const nomProp = document.getElementById("nombre_prop").value;
     let mensaje = "";
 
+    // Si el campo está vacío
     if (nomProp.length === 0) {
         mensaje = "Este campo no puede estar vacio, introduce un nombre valido";
+    // Si tiene algo pero menos de 3 caracteres
     } else if (nomProp.length < 3) {
         mensaje = "Introduce un nombre real";
     }
@@ -222,8 +265,10 @@ function validaDNI() {
     const dniProp = document.getElementById("dni_prop").value;
     let mensaje = "";
 
+    // Valida el formato del DNI español: 8 números seguidos de una letra válida
     const regexDNI = /^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i;
 
+    // Si el DNI no cumple el formato, ya sea vacío o con formato incorrecto
     if (!regexDNI.test(dniProp)) {
         mensaje= "DNI invalido, introduce uno valido";
     }
@@ -235,10 +280,13 @@ function validaDNI() {
 function validaEmailProp() {
     const emailProp = document.getElementById("email_prop").value;
     let mensaje = "";
+
+    // Mismo regex de email usado en el resto del proyecto
     const regex = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
     
     if (emailProp.length === 0) {
         mensaje = "El campo no puede estar vacio";
+    // Si tiene contenido pero no cumple el formato de email
     } else if (!regex.test(emailProp)) {
         mensaje = "El formato del email no es valido";
     }
@@ -249,12 +297,16 @@ function ValidaTelfProp() {
     const telfProp = document.getElementById("telfProp").value;
     let mensaje = "";
 
+    // Valida exactamente 9 dígitos numéricos
     const regex = /^[0-9]{9}$/;
 
+    // Si el campo está vacío o solo tiene espacios
     if (telfProp.trim() === "") {
         mensaje = "El teléfono no puede estar vacío";
+    // Si tiene algo pero menos de 9 dígitos
     } else if (telfProp.length < 9) {
-        mensaje = "El telefono no puede tener menos de 9 digitos"
+        mensaje = "El telefono no puede tener menos de 9 digitos";
+    // Si tiene 9 o más caracteres pero no son todos números
     } else if (!regex.test(telfProp)) {
         mensaje = "El numero debe tener 9 digitos";
     }
@@ -268,8 +320,10 @@ function ValidaNomMasc() {
     const nomMasc = document.getElementById("nomMasc").value;
     let mensaje = "";
 
+    // Si el campo está vacío
     if (nomMasc.length === 0) {
         mensaje = "El campo no puede estar vacío";
+    // Si tiene algo pero menos de 2 caracteres
     } else if (nomMasc.length < 2) {
         mensaje = "El nombre debe tener al menos 2 caracteres";
     }
@@ -281,7 +335,8 @@ function ValidarRaza() {
     const raza = document.getElementById("raza").selectedIndex;
     let mensaje = "";
 
-    if (raza === null) {
+    // Si sigue seleccionado el placeholder "Selecciona una opción"
+    if (raza === 0) {
         mensaje = "Debes seleccionar una opcion";
     }
 
@@ -292,7 +347,8 @@ function ValidarDueno() {
     const dueno = document.getElementById("dueno").selectedIndex;
     let mensaje = "";
 
-    if (dueno === null) {
+    // Si sigue seleccionado el placeholder "Selecciona una opción"
+    if (dueno === 0) {
         mensaje = "Debes seleccionar un dueño";
     }
 
@@ -303,7 +359,8 @@ function ValidaVet() {
     const vet = document.getElementById("vet").selectedIndex;
     let mensaje = "";
 
-    if (vet === null) {
+    // Si sigue seleccionado el placeholder "Selecciona una opción"
+    if (vet === 0) {
         mensaje = "Debes seleccionar un veterinario";
     }
 
@@ -314,8 +371,10 @@ function validaChip () {
     const chip = document.getElementById("chip").value;
     let mensaje = "";
 
+    // Si el campo está vacío
     if (chip === "") {
         mensaje = "Este campo no puede estar vacio";
+    // Si tiene algo pero menos de 15 dígitos
     } else if (chip.length < 15) {
         mensaje = "El chip tiene debe tener 15 digitos si o si";
     }
@@ -327,7 +386,8 @@ function validaSex() {
     const sexo = document.getElementById("sexo").selectedIndex;
     let mensaje = "";
 
-    if (sexo === null) {
+    // Si sigue seleccionado el placeholder
+    if (sexo === 0) {
         mensaje ="Debe seleccionar una opcion";
     } 
 

@@ -31,6 +31,7 @@ if ($propietarios === null) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Propietarios</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../css/estilos.css">
@@ -74,9 +75,17 @@ if ($propietarios === null) {
             <p class="filtros-activos"><?php echo $total_filas; ?> resultado(s) encontrado(s)</p>
         <?php endif; ?>
 
-        <?php if (isset($_SESSION['mensaje'])): ?>
-            <div class="mensaje-php exito-php"><?php echo $_SESSION['mensaje']; unset($_SESSION['mensaje']); ?></div>
-        <?php endif; ?>
+        <?php if (isset($_SESSION['mensaje'])) { ?>
+            <div class="alerta-exito">
+                <?php
+                    $mensajeExito = $_SESSION['mensaje'];
+
+                    echo "<i class=\"fa-solid fa-circle-check\"></i> " . $mensajeExito; // Mostrar mensaje de éxito
+
+                    unset($_SESSION['mensaje']); // Limpiar el mensaje para que no se repita en recargas
+                ?>
+            </div>
+        <?php } ?>
 
     <div class="tabla-responsive">
         <table class="tabla-crud">
