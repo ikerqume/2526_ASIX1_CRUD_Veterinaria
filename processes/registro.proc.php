@@ -23,8 +23,21 @@ if (isset($_POST['btn_registro'])) {
         exit();
     }
 
-    // AQUI ESTA LA MAGIA DEL GUION: La encriptacion segura de la contraseña
-    // Usamos la funcion nativa password_hash de PHP para generar un Hash seguro y no guardar el texto plano
+    $sql_check = "SELECT id FROM usuarios WHERE username = ? OR email = ?";
+    $stmt_check = mysqli_prepare($conn, $sql_check);
+    mysqli_stmt_bind_param($stmt_check, "ss", $username, $email);
+    mysqli_stmt_execute($stmt_check);
+    mysqli_stmt_store_result($stmt_check);
+
+    if (mysqli_stmt_num_rows($stmt_check) > 0) {
+        $_SESSION['error_registro'] = "El usuario o email ya existe en el sistema.";
+        header("Location: ../view/registro.php");
+        mysqli_stmt_close($stmt_check);
+        exit();
+    }
+    mysqli_stmt_close($stmt_check);
+
+    // Usamos la funcion nativa password_hash de PHP para generar un Hsh seguro y no guardar el texto plano
     // Cumpliendo asi con la normativa del proyecto de no usar MD5
     $pass_hash = password_hash($password, PASSWORD_BCRYPT);
 
