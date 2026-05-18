@@ -1,36 +1,61 @@
 <?php
+// Iniciamos la sesion para comprobar que el usuario tiene permiso para estar aqui
 session_start();
+
+// Si no hay un id de usuario guardado en la sesion lo echamos de patitas a la pantalla de login
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../login.php");
     exit();
 }
+
+// Nos traemos el archivo que conecta con la base de datos para poder lanzar consultas
 include '../../services/conexion.php';
 
-// Recogemos lo que el usuario haya escrito en el buscador
+// Recogemos lo que el usuario haya escrito en los dos buscadores (Nombre de mascota y Nombre de dueño)
+// Usamos trim para limpiar espacios accidentales y evitar fallos en la busqueda
 $f_nombre = isset($_GET['nombre']) ? trim($_GET['nombre']) : '';
+$f_propietario = isset($_GET['propietario']) ? trim($_GET['propietario']) : '';
 
-// Preparamos la búsqueda
+// Creamos un array vacio donde iremos acumulando los filtros que el usuario decida usar
 $condiciones = [];
+
+// Si escribe algo en el buscador de mascotas lo añadimos a nuestras condiciones usando un LIKE para busquedas parciales
 if ($f_nombre !== '') {
     $condiciones[] = "mascotas.nombre LIKE '%$f_nombre%'";
 }
 
-// Consulta uniendo las tablas
+// Si tambien escribe algo en el buscador de dueños lo acumulamos al array. Al ser independiente, logramos el filtro sumativo
+if ($f_propietario !== '') {
+    $condiciones[] = "propietarios.nombre LIKE '%$f_propietario%'";
+}
+
+
+// Seleccionamos todos los datos del animal y traemos de forma alias (AS) el nombre de su raza, dueño y veterinario asignado.
+// ATENCION AL DETALLE: Usamos LEFT JOIN en lugar de INNER JOIN por una razon logica muy potente de cara a la clinica.
+// Si usaramos INNER JOIN y un perro no tuviera un veterinario asignado en ese momento (porque por ejemplo lo hemos despedido),
+// ¡ese perro borraria o desaparecería por completo de esta tabla! Con LEFT JOIN nos aseguramos de traer SIEMPRE todas las mascotas,
+// y si alguna casilla como la raza o el veterinario viene vacia de la base de datos, simplemente nos pintara un "Sin asignar".
 $sql = "SELECT mascotas.*, razas.nombre AS r_nom, propietarios.nombre AS p_nom, veterinarios.nombre AS v_nom 
         FROM mascotas
         LEFT JOIN razas ON mascotas.raza_id = razas.id
         LEFT JOIN propietarios ON mascotas.propietario_id = propietarios.id
         LEFT JOIN veterinarios ON mascotas.veterinario_id = veterinarios.id";
 
+// Si el array de condiciones no esta vacio, concatenamos un WHERE a la consulta uniendo los filtros con un "AND"
 if (!empty($condiciones)) {
     $sql .= " WHERE " . implode(" AND ", $condiciones);
 }
 
+// Ejecutamos la consulta final combinada contra la conexion de la base de datos
 $resultado = mysqli_query($conn, $sql);
+
+// Contamos el numero total de filas obtenidas. Esto cumple con el requisito del PDF de mostrar el recuento de resultados
 $total_filas = mysqli_num_rows($resultado);
 
+// Guardamos todos los datos en una matriz asociativa para poder recorrerlos limpiamente en el HTML
 $mascotas = mysqli_fetch_all($resultado, MYSQLI_ASSOC);
 
+// Por pura seguridad, si la consulta no devuelve absolutamente nada forzamos a que sea un array vacio para que el bucle no de error
 if ($mascotas === null) {
     $mascotas = [];
 }
@@ -74,10 +99,8 @@ if ($mascotas === null) {
             <div class="alerta-exito">
                 <?php
                     $mensajeExito = $_SESSION['mensaje'];
-
-                    echo "<i class=\"fa-solid fa-circle-check\"></i> " . $mensajeExito; // Mostrar mensaje de éxito
-
-                    unset($_SESSION['mensaje']); // Limpiar el mensaje para que no se repita en recargas
+                    echo "<i class=\"fa-solid fa-circle-check\"></i> " . $mensajeExito; 
+                    unset($_SESSION['mensaje']); // Lo eliminamos inmediatamente para que no reaparezca si el usuario refresca la pagina
                 ?>
             </div>
         <?php } ?>
@@ -85,18 +108,20 @@ if ($mascotas === null) {
         <?php if (isset($_SESSION['error'])): ?>
             <div class="alerta-error">
                 <i class="fa-solid fa-circle-xmark"></i> <?php echo $_SESSION['error']; ?>
-                <?php unset($_SESSION['error']); // Lo borramos para que no salga al recargar ?>
+                <?php unset($_SESSION['error']); // Lo limpiamos para que desaparezca al recargar ?>
             </div>
         <?php endif; ?>
+
         <form method="GET" action="" class="form-filtros">
-            <input type="text" name="nombre" placeholder="Nombre mascota..." value="<?php echo $f_nombre; ?>">
+            <input type="text" name="nombre" placeholder="Nombre mascota..." value="<?php echo htmlspecialchars($f_nombre); ?>">
+            <input type="text" name="propietario" placeholder="Nombre dueño..." value="<?php echo htmlspecialchars($f_propietario); ?>">
             <div class="filtros-botones">
-                <button type="submit" class="btn-filtrar">Buscar Mascotas</button>
+                <button type="submit" class="btn-filtrar">Buscar</button>
                 <a href="index.php" class="btn-limpiar">Limpiar</a>
             </div>
         </form>
 
-        <?php if ($f_nombre !== ''): ?>
+        <?php if ($f_nombre !== '' || $f_propietario !== ''): ?>
             <p class="filtros-activos"><?php echo $total_filas; ?> resultado(s) encontrado(s)</p>
         <?php endif; ?>
 

@@ -1,33 +1,41 @@
 <?php
+// Empezamos abriendo la sesión para mantener al usuario logueado y gestionar mensajes
 session_start();
+
+// Nos traemos el archivo de conexión a la base de datos
 include '../../services/conexion.php';
 
-// Obtenemos el chip de la mascota que queremos editar desde la URL
+// Recogemos el chip de la mascota que queremos editar, el cual nos llega por la URL al hacer clic en 'Editar'
 $chip = $_GET['chip'];
 
-// Consulta para obtener los datos actuales de la mascota (usando prepared statements)
+// Preparamos una consulta segura para obtener todos los datos de esa mascota en concreto
 $sql_mascota = "SELECT * FROM mascotas WHERE chip = ?";
 $stmt = mysqli_prepare($conn, $sql_mascota);
+
+// Enlazamos el chip a la consulta indicando que es texto (string) con la 's'
 mysqli_stmt_bind_param($stmt, "s", $chip);
 mysqli_stmt_execute($stmt);
+
+// Recogemos el resultado de la búsqueda
 $resultado_mascota = mysqli_stmt_get_result($stmt);
 
-// Comprobamos si la consulta fue exitosa
+// Si ha habido algún problema técnico con la consulta, mostramos un error rápido y paramos
 if ($resultado_mascota === false) {
     echo "<p>Error al obtener los datos de la mascota. Intenta de nuevo más tarde.</p>";
     exit;
 }
 
-// Traemos los datos de la mascota
+// Transformamos el resultado en un array asociativo para poder usar los datos fácilmente (ej: $mascota['nombre'])
 $mascota = mysqli_fetch_assoc($resultado_mascota);
 
-// Si la mascota no existe, mostramos un error
+// Si la búsqueda no ha devuelto nada, significa que alguien ha escrito un chip falso en la URL
 if ($mascota === null) {
     echo "<p>La mascota no fue encontrada.</p>";
     exit;
 }
 
-// Consultas para las listas desplegables
+
+// Buscamos todas las razas ordenadas alfabéticamente
 $sql_razas = "SELECT id, nombre FROM razas ORDER BY nombre";
 $resultado_razas = mysqli_query($conn, $sql_razas);
 
@@ -36,6 +44,7 @@ if ($resultado_razas === false) {
     exit;
 }
 
+// Hacemos lo mismo con los dueños
 $sql_props = "SELECT id, nombre FROM propietarios ORDER BY nombre";
 $resultado_props = mysqli_query($conn, $sql_props);
 
@@ -44,6 +53,7 @@ if ($resultado_props === false) {
     exit;
 }
 
+// Y lo mismo con los veterinarios
 $sql_vets = "SELECT id, nombre FROM veterinarios ORDER BY nombre";
 $resultado_vets = mysqli_query($conn, $sql_vets);
 
@@ -52,24 +62,16 @@ if ($resultado_vets === false) {
     exit;
 }
 
-// Guardamos los resultados en arreglos para poder iterar con foreach
+// Convertimos los resultados de las tres consultas en arrays (arreglos)
+// Así podremos recorrerlos fácilmente luego con un bucle foreach en el HTML
 $razas = mysqli_fetch_all($resultado_razas, MYSQLI_ASSOC);
-
-if ($razas === null) {
-    $razas = [];
-}
+if ($razas === null) { $razas = []; }
 
 $propietarios = mysqli_fetch_all($resultado_props, MYSQLI_ASSOC);
-
-if ($propietarios === null) {
-    $propietarios = [];
-}
+if ($propietarios === null) { $propietarios = []; }
 
 $veterinarios = mysqli_fetch_all($resultado_vets, MYSQLI_ASSOC);
-
-if ($veterinarios === null) {
-    $veterinarios = [];
-}
+if ($veterinarios === null) { $veterinarios = []; }
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -104,14 +106,15 @@ if ($veterinarios === null) {
     <main class="contenedor-crud">
         <div class="contenedor-form form-centrado">
             <form action="../../processes/mascotas/editar.proc.php" method="POST" onsubmit="return validarFormMascota()">
+                
                 <h2>Editar Ficha de <?php echo htmlspecialchars($mascota['nombre']); ?></h2>
 
-                <input type="hidden" name="chip_mascota" value="<?php echo $chip; ?>">
+                <input type="hidden" name="chip_original" value="<?php echo $chip; ?>">
 
                 <div class="grupo-input">
-                    <label for="nombre_masc">Nombre:</label>
-                    <input id="nomMasc" type="text" name="nombre_masc" value="<?php echo htmlspecialchars($mascota['nombre']); ?>" required onblur="ValidaNomMasc()">
-                    <p id="errorSex" class="texto-error"></p>
+                    <label for="nuevo_chip">CHIP de la Mascota:</label>
+                    <input id="chip" type="text" name="nuevo_chip" value="<?php echo $chip; ?>" required onblur="validaChip()">
+                    <p id="errorChip" class="texto-error"></p>
                 </div>
 
                 <div class="grupo-input">
@@ -134,11 +137,14 @@ if ($veterinarios === null) {
                     <label for="raza">Raza:</label>
                     <select id="raza" name="id_raza" required onblur="ValidarRaza()">
                         <?php
+                            // Aquí usamos el array de razas que creamos arriba y lo recorremos con un foreach
                             foreach ($razas as $raza) {
+                                // Limpiamos los datos por seguridad antes de imprimirlos en el HTML
                                 $razaId = htmlspecialchars($raza['id']);
-
                                 $razaNombre = htmlspecialchars($raza['nombre']);
 
+                                // Comprobamos si el ID de esta raza coincide con el ID de raza que tiene la mascota guardada
+                                // Si coincide, marcamos esta opción como la seleccionada por defecto
                                 $selected = ($raza['id'] == $mascota['raza_id']) ? 'selected' : '';
                         ?>
                             <option value="<?php echo $razaId; ?>" <?php echo $selected; ?>>
@@ -155,11 +161,10 @@ if ($veterinarios === null) {
                     <label for="id_prop">Dueño:</label>
                     <select id="dueno" name="id_prop" required onblur="ValidarDueno()">
                         <?php
+                            // Hacemos exactamente el mismo proceso para el desplegable de los propietarios
                             foreach ($propietarios as $prop) {
                                 $propId = htmlspecialchars($prop['id']);
-
                                 $propNombre = htmlspecialchars($prop['nombre']);
-
                                 $selected = ($prop['id'] == $mascota['propietario_id']) ? 'selected' : '';
                         ?>
                             <option value="<?php echo $propId; ?>" <?php echo $selected; ?>>
@@ -176,11 +181,10 @@ if ($veterinarios === null) {
                     <label for="id_vet">Veterinario:</label>
                     <select id="id_vet" name="id_vet">
                         <?php
+                            // Y repetimos la misma lógica para rellenar la lista de los veterinarios disponibles
                             foreach ($veterinarios as $vet) {
                                 $vetId = htmlspecialchars($vet['id']);
-
                                 $vetNombre = htmlspecialchars($vet['nombre']);
-
                                 $selected = ($vet['id'] == $mascota['veterinario_id']) ? 'selected' : '';
                         ?>
                             <option value="<?php echo $vetId; ?>" <?php echo $selected; ?>>

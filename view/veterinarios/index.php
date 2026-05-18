@@ -1,30 +1,50 @@
 <?php
+// Arrancamos la sesion para poder comprobar si el usuario esta logueado y para leer los mensajes de alerta
 session_start();
+
+// Hacemos nuestra clasica comprobacion de seguridad para evitar intrusos
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../login.php");
     exit();
 }
+
+// Nos traemos el archivo de conexion a la base de datos
 include '../../services/conexion.php';
 
+// Recogemos lo que el usuario haya escrito en los buscadores de nombre y especialidad
+// Usamos trim para quitar los espacios vacios por si se le ha escapado alguno al teclear
 $f_nombre = isset($_GET['nombre']) ? trim($_GET['nombre']) : '';
 $f_especialidad = isset($_GET['especialidad']) ? trim($_GET['especialidad']) : '';
 
+// Como vamos a meter estos textos directamente en la consulta SQL, usamos esta funcion nativa de mysqli
+// Sirve para escapar caracteres especiales y evitar que nos hagan inyeccion de codigo SQL desde el buscador
 $f_nombre = mysqli_real_escape_string($conn, $f_nombre);
 $f_especialidad = mysqli_real_escape_string($conn, $f_especialidad);
 
+// Preparamos un array vacio donde iremos acumulando los filtros que el usuario quiera aplicar
 $condiciones = [];
+
+// Si ha escrito algo en el nombre, lo metemos en el array. Usamos LIKE para que busque coincidencias parciales
 if ($f_nombre !== '') $condiciones[] = "nombre LIKE '%$f_nombre%'";
+
+// Y si ha escrito algo en especialidad lo añadimos tambien, logrando asi que los filtros se sumen
 if ($f_especialidad !== '') $condiciones[] = "especialidad LIKE '%$f_especialidad%'";
 
+// Empezamos a montar la orden para la base de datos seleccionando todos los veterinarios
 $sql = "SELECT * FROM veterinarios";
+
+// Si el array de condiciones tiene algo dentro, le pegamos el WHERE a la consulta y unimos los filtros con AND
 if (!empty($condiciones)) {
     $sql .= " WHERE " . implode(" AND ", $condiciones);
 }
+
+// Ejecutamos la peticion a la base de datos
 $resultado = mysqli_query($conn, $sql);
 
-// Guardamos los resultados en un arreglo para usar foreach
+// Guardamos todos los resultados devueltos en un array asociativo para poder recorrerlo comodamente luego en el HTML
 $veterinarios = mysqli_fetch_all($resultado, MYSQLI_ASSOC);
 
+// Por pura seguridad, si la base de datos no nos devuelve nada forzamos a que la variable sea un array vacio
 if ($veterinarios === null) {
     $veterinarios = [];
 }
@@ -78,10 +98,10 @@ if ($veterinarios === null) {
             <div class="alerta-exito">
                 <?php
                     $mensajeExito = $_SESSION['mensaje'];
-
-                    echo "<i class=\"fa-solid fa-circle-check\"></i> " . $mensajeExito; // Mostrar mensaje de éxito
-
-                    unset($_SESSION['mensaje']); // Limpiar el mensaje para que no se repita en recargas
+                    echo "<i class=\"fa-solid fa-circle-check\"></i> " . $mensajeExito; 
+                    
+                    // Super importante: borramos el mensaje de la sesion justo despues de pintarlo para que no salga siempre
+                    unset($_SESSION['mensaje']); 
                 ?>
             </div>
         <?php } ?>
@@ -89,9 +109,8 @@ if ($veterinarios === null) {
         <?php if (isset($_SESSION['error'])) { ?>
             <div class='mensaje-php error-php'>
                 <?php
-                    echo $_SESSION['error']; // Mostrar el mensaje de error
-
-                    unset($_SESSION['error']); // Limpiar el mensaje para que no se repita en recargas
+                    echo $_SESSION['error']; 
+                    unset($_SESSION['error']); 
                 ?>
             </div>
         <?php } ?>
@@ -114,46 +133,30 @@ if ($veterinarios === null) {
                 <?php if (count($veterinarios) > 0) { ?>
                     <?php foreach ($veterinarios as $fila) { ?>
                         <?php
+                            // Limpiamos los datos con htmlspecialchars justo antes de imprimirlos en el HTML
+                            // Esto evita que si alguien ha colado una etiqueta HTML rara en la base de datos se ejecute en nuestra tabla
                             $id = $fila['id'];
-
                             $nombre = htmlspecialchars($fila['nombre']);
-
                             $apellidos = htmlspecialchars($fila['apellidos']);
-
                             $especialidad = htmlspecialchars($fila['especialidad']);
-
                             $telefono = htmlspecialchars($fila['telefono']);
-
                             $email = htmlspecialchars($fila['email']);
-
                             $salario = htmlspecialchars($fila['salario']);
                         ?>
                         <tr>
-                            <td>
-                                <?php echo $id; ?>
-                            </td>
-                            <td>
-                                <?php echo $nombre; ?>
-                            </td>
-                            <td>
-                                <?php echo $apellidos; ?>
-                            </td>
-                            <td>
-                                <?php echo $especialidad; ?>
-                            </td>
-                            <td>
-                                <?php echo $telefono; ?>
-                            </td>
-                            <td>
-                                <?php echo $email; ?>
-                            </td>
-                            <td>
-                                <?php echo $salario; ?>
-                            </td>
+                            <td><?php echo $id; ?></td>
+                            <td><?php echo $nombre; ?></td>
+                            <td><?php echo $apellidos; ?></td>
+                            <td><?php echo $especialidad; ?></td>
+                            <td><?php echo $telefono; ?></td>
+                            <td><?php echo $email; ?></td>
+                            <td><?php echo $salario; ?></td>
+                            
                             <td class="acciones-tabla">
                                 <a href="editar.php?id=<?php echo $id; ?>" class="btn-editar">
                                     Editar
                                 </a>
+                                
                                 <a href="../../processes/veterinarios/borrar.proc.php?id=<?php echo $id; ?>" class="btn-borrar" onclick="return confirm('¿Estás seguro de borrar este veterinario?')">
                                     Borrar
                                 </a>
@@ -174,4 +177,7 @@ if ($veterinarios === null) {
 
 </body>
 </html>
-<?php mysqli_close($conn); ?>
+<?php 
+// Al final del archivo cerramos la conexion general con la base de datos
+mysqli_close($conn); 
+?>

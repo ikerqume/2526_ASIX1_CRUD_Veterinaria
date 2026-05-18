@@ -1,4 +1,9 @@
-<?php session_start(); ?>
+<?php 
+// Iniciamos o recuperamos la sesión nada más arrancar la página
+// Esto es super necesario porque si el backend (registro.proc.php) detecta que el usuario 
+// o el email ya existen, nos mandará de vuelta aquí con un mensaje de error guardado en la sesión
+session_start(); 
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -17,15 +22,18 @@
     </div>
 
     <?php
+    // Aquí gestionamos la respuesta del servidor en caso de que el registro falle
+    // Comprobamos si la variable de sesión 'error_registro' tiene algún mensaje guardado
     if (isset($_SESSION['error_registro'])) {
+        // Si hay un error (por ejemplo, email duplicado), lo pintamos en un recuadro rojo bien visible
         echo "<div class='mensaje-php error-php'>" . $_SESSION['error_registro'] . "</div>";
+        // Al instante limpiamos la variable con unset para que el cartelito no se quede ahí clavado
+        // si el usuario decide refrescar la pantalla manualmente
         unset($_SESSION['error_registro']);
     }
     ?>
 
     <form action="../processes/registro.proc.php" method="POST">
-
-    <!-- id="formRegistro" onsubmit="return validarRegistro()" -->
         
         <div class="grupo-input">
             <label for="username">Nombre de Usuario</label>

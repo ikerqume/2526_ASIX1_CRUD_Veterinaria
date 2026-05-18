@@ -1,11 +1,16 @@
 <?php
+// Iniciamos la sesión para saber si el usuario está logueado
 session_start();
 if (!isset($_SESSION['user_id'])) { header("Location: ../login.php"); exit(); }
+
+// Conectamos con la base de datos usando el archivo común de conexión
 include '../../services/conexion.php';
 
+// Recogemos los filtros de búsqueda que el usuario pueda enviar por GET
 $f_nombre = isset($_GET['nombre']) ? trim($_GET['nombre']) : '';
 $f_dni = isset($_GET['dni']) ? trim($_GET['dni']) : '';
 
+// Escapamos los valores para evitar inyección SQL básica en los LIKE
 $f_nombre = mysqli_real_escape_string($conn, $f_nombre);
 $f_dni = mysqli_real_escape_string($conn, $f_dni);
 
@@ -20,13 +25,15 @@ if (!empty($condiciones)) {
 $resultado = mysqli_query($conn, $sql);
 $total_filas = mysqli_num_rows($resultado);
 
-// Guardamos los resultados en un arreglo para usar foreach
+// Guardamos los resultados en un arreglo para poder recorrerlos con foreach
 $propietarios = mysqli_fetch_all($resultado, MYSQLI_ASSOC);
 
+// Si no hay resultados, forzamos un arreglo vacío para evitar errores en el bucle
 if ($propietarios === null) {
     $propietarios = [];
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -101,17 +108,13 @@ if ($propietarios === null) {
             </thead>
             <tbody>
                 <?php
+                    // Recorremos cada propietario y mostramos sus datos en la tabla
                     foreach ($propietarios as $f) {
                         $nombre = htmlspecialchars($f['nombre']);
-
                         $apellidos = htmlspecialchars($f['apellidos']);
-
                         $dni = htmlspecialchars($f['dni']);
-
                         $telefono = htmlspecialchars($f['telefono']);
-
                         $email = htmlspecialchars($f['email']);
-
                         $id = $f['id'];
                 ?>
                     <tr>
