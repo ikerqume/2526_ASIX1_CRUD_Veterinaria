@@ -48,7 +48,7 @@ mysqli_stmt_close($stmt);
     <title>Editar Raza</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../css/estilos.css">
-    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/fa6-solid/paw.svg?color=%230056b3">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/fa6-solid/paw.svg?color=%2328a745">
     <script defer src="../../js/script.js"></script>
 </head>
 <body>
@@ -59,7 +59,7 @@ mysqli_stmt_close($stmt);
             <h2>Clinica Perriatra</h2>
         </div>
         <nav class="navbar-enlaces">
-            <a href="../index.php">Inicio</a>
+            <a href="../vista.php">Inicio</a>
             <a href="../mascotas/index.php">Mascotas</a>
             <a href="../propietarios/index.php">Propietarios</a>
             <a href="../veterinarios/index.php">Veterinarios</a>

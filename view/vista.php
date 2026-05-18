@@ -21,7 +21,7 @@ $username = htmlspecialchars($_SESSION['username']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perriatra - Panel Principal</title>
     <link rel="stylesheet" href="../css/estilos.css">
-        <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/fa6-solid/paw.svg?color=%230056b3">
+        <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/fa6-solid/paw.svg?color=%2328a745">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>

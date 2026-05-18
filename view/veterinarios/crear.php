@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id'])) {
     <title>Añadir Veterinario</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../css/estilos.css">
-    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/fa6-solid/paw.svg?color=%230056b3">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/fa6-solid/paw.svg?color=%2328a745">
     <script defer src="../../js/script.js"></script>
 </head>
 <body>
