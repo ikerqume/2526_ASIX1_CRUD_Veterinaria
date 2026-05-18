@@ -11,6 +11,7 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perriatra - Iniciar Sesion</title>
     <link rel="stylesheet" href="../css/estilos.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/fa6-solid/paw.svg?color=%230056b3">
     <script defer src="../js/script.js"></script>
 </head>
 <body class="login-page">
