@@ -522,8 +522,8 @@ body {
     display: inline-block; /* Ajusta al contenido */
 }
 
-/* TABLETS Y PANTALLAS MEDIANAS (Hasta 850px para evitar choques en el menú) */
-@media (max-width: 850px) {
+/* TABLETS Y PANTALLAS MEDIANAS (Hasta 950px para evitar choques en el menú) */
+@media (max-width: 950px) {
     /* 1. Fondo adaptado */
     body {
         background-size: cover; 
