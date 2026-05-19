@@ -87,8 +87,8 @@ if ($veterinarios === null) {
         </div>
 
         <form method="GET" action="" class="form-filtros">
-            <input type="text" name="nombre" placeholder="Nombre..." value="<?php echo htmlspecialchars($f_nombre); ?>">
-            <input type="text" name="especialidad" placeholder="Especialidad..." value="<?php echo htmlspecialchars($f_especialidad); ?>">
+            <input type="text" name="nombre" placeholder="Nombre..." value="<?php echo htmlspecialchars($f_nombre ?? ''); ?>">
+            <input type="text" name="especialidad" placeholder="Especialidad..." value="<?php echo htmlspecialchars($f_especialidad ?? ''); ?>">
             <div class="filtros-botones">
                 <button type="submit" class="btn-filtrar">Buscar</button>
                 <a href="index.php" class="btn-limpiar">Limpiar</a>
@@ -134,15 +134,14 @@ if ($veterinarios === null) {
                 <?php if (count($veterinarios) > 0) { ?>
                     <?php foreach ($veterinarios as $fila) { ?>
                         <?php
-                            // Limpiamos los datos con htmlspecialchars justo antes de imprimirlos en el HTML
-                            // Esto evita que si alguien ha colado una etiqueta HTML rara en la base de datos se ejecute en nuestra tabla
+                            // Añadimos '?? \'\'' a todos los campos para evitar el error de los nulos
                             $id = $fila['id'];
-                            $nombre = htmlspecialchars($fila['nombre']);
-                            $apellidos = htmlspecialchars($fila['apellidos']);
-                            $especialidad = htmlspecialchars($fila['especialidad']);
-                            $telefono = htmlspecialchars($fila['telefono']);
-                            $email = htmlspecialchars($fila['email']);
-                            $salario = htmlspecialchars($fila['salario']);
+                            $nombre = htmlspecialchars($fila['nombre'] ?? '');
+                            $apellidos = htmlspecialchars($fila['apellidos'] ?? '');
+                            $especialidad = htmlspecialchars($fila['especialidad'] ?? '');
+                            $telefono = htmlspecialchars($fila['telefono'] ?? '');
+                            $email = htmlspecialchars($fila['email'] ?? '');
+                            $salario = htmlspecialchars($fila['salario'] ?? '');
                         ?>
                         <tr>
                             <td><?php echo $id; ?></td>

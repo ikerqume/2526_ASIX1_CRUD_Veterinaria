@@ -117,6 +117,12 @@ if ($veterinarios === null) { $veterinarios = []; }
                     <input id="chip" type="text" name="nuevo_chip" value="<?php echo $chip; ?>" required onblur="validaChip()">
                     <p id="errorChip" class="texto-error"></p>
                 </div>
+                
+                <div class="grupo-input">
+                    <label for="nomMasc">Nombre:</label>
+                    <input id="nomMasc" type="text" name="nombre_masc" value="<?php echo htmlspecialchars($mascota['nombre']); ?>" required onblur="ValidaNomMasc()">
+                    <p id="errorNomMasc" class="texto-error"></p>
+                </div>
 
                 <div class="grupo-input">
                     <label for="sexo">Sexo:</label>
