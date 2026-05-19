@@ -107,8 +107,8 @@ if ($props === null) {
                 </div>
 
                 <div class="grupo-input">
-                    <label for="nombre_masc">Nombre:</label>
-                    <input id="nombre_masc" type="text" name="nombre_masc" required onblur="ValidaNomMasc()">
+                    <label for="nomMasc">Nombre:</label>
+                    <input id="nomMasc" type="text" name="nombre_masc" required onblur="ValidaNomMasc()">
                     <p id="errorNomMasc" class="texto-error"></p>
                 </div>
 
