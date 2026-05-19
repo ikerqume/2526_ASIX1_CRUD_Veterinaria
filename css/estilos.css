@@ -522,29 +522,26 @@ body {
     display: inline-block; /* Ajusta al contenido */
 }
 
-/* =========================================================================
-   📱 DISEÑO ADAPTABLE A MÓVILES (RESPONSIVE PRO)
-   ========================================================================= */
-
-/* TABLETS Y PANTALLAS MEDIANAS (Hasta 768px) */
-@media (max-width: 768px) {
+/* TABLETS Y PANTALLAS MEDIANAS (Hasta 850px para evitar choques en el menú) */
+@media (max-width: 850px) {
     /* 1. Fondo adaptado */
     body {
-        background-size: cover; /* Evita que el fondo del 67% se vea raro en móvil */
+        background-size: cover; 
+        overflow-x: hidden; /* Evita que toda la página web baile hacia los lados */
     }
 
-    /* 2. Navbar apilada y centrada (Arregla image_4.png) */
+    /* 2. Navbar apilada y centrada */
     .navbar {
-        flex-direction: column; /* Apila el logo y los enlaces verticalmente */
+        flex-direction: column; 
         padding: 10px;
-        gap: 10px; /* Separación entre logo y menú */
+        gap: 10px; 
     }
     .navbar-logo h2 { font-size: 20px; }
     .navbar-logo img { height: 40px; }
     
     .navbar-enlaces {
         display: flex;
-        flex-wrap: wrap; /* ✨ LA MAGIA: Permite que los botones salten de línea si no caben */
+        flex-wrap: wrap; 
         justify-content: center;
         align-items: center;
         width: 100%;
@@ -553,15 +550,17 @@ body {
     }
     
     .navbar-enlaces a, .btn-cerrar {
-        margin: 0; /* Matamos cualquier margen antiguo que los empuje hacia los lados */
+        margin: 0; 
         text-align: center;
-        flex-grow: 0; /* Evita que se estiren de forma rara */
+        flex-grow: 0; 
     }
 
     /* 3. Ajuste de márgenes por la nueva Navbar */
     .contenedor-dashboard, .contenedor-crud {
-        margin-top: 140px; /* Bajamos el contenido para que no lo tape la navbar */
+        margin-top: 180px; 
         padding: 15px;
+        width: 100%;
+        box-sizing: border-box; /* Evita que los márgenes sumen ancho extra y rompan la pantalla */
     }
 
     /* 4. Tarjetas del Dashboard en una sola columna */
@@ -569,12 +568,12 @@ body {
         grid-template-columns: 1fr;
     }
 
-    /* 5. El botón de volver pasa a ser parte del flujo normal (no flota absolúto) (Arregla image_3.png) */
+    /* 5. El botón de volver pasa a ser parte del flujo normal */
     .btn-volver {
         position: relative;
         top: 0; left: 0;
         display: inline-block;
-        margin-top: 130px; /* Bajamos el botón para que no lo tape el menú apilado */
+        margin-top: 170px; 
         margin-left: 15px;
         margin-bottom: -10px;
     }
@@ -597,10 +596,16 @@ body {
         flex: 1;
         text-align: center;
     }
+    .tabla-responsive {
+        width: 100%;
+        overflow-x: auto; /* Crea un scroll horizontal SOLO para la tabla */
+        display: block;
+        margin-top: 15px;
+        -webkit-overflow-scrolling: touch; /* Hace que el scroll táctil en el móvil sea suave */
+    }
 
-    /* 7. MAGIA PARA TABLAS: Evita que el texto salte de línea y se deforme */
     .tabla-crud th, .tabla-crud td {
-        white-space: nowrap; 
+        white-space: nowrap; /* Mantiene el texto en una línea para que no se deforme */
     }
 }
 
@@ -609,13 +614,23 @@ body {
     .navbar-logo h2 { font-size: 18px; }
     .navbar-logo img { height: 35px; }
 
+    /* Achicamos un pelín los botones para que el menú no sea gigante */
+    .navbar-enlaces a, .btn-cerrar {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+
     .contenedor-dashboard, .contenedor-crud {
-        margin-top: 150px; 
+        margin-top: 220px; 
+    }
+
+    .btn-volver {
+        margin-top: 210px; 
     }
 
     /* Mejoras de espacio vital para el usuario en formularios */
     .contenedor-form {
-        padding: 25px 20px; /* Reducimos el padding lateral para ganar espacio de lectura */
+        padding: 25px 20px; 
         width: 95%;
     }
 
@@ -625,7 +640,7 @@ body {
         gap: 10px;
     }
     .btn-principal, .btn-cancelar {
-        padding: 14px; /* Botones más altos (mejor para el dedo) */
+        padding: 14px; 
         width: 100%;
     }
 }
